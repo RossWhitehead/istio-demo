@@ -1,0 +1,40 @@
+##################################################################################################
+# Accounts service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: accounts
+  labels:
+    app: accounts
+    service: accounts
+spec:
+  ports:
+  - port: 3000
+    name: http
+  selector:
+    app: accounts
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts
+  labels:
+    app: accounts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accounts
+  template:
+    metadata:
+      labels:
+        app: accounts
+    spec:
+      serviceAccountName: bookinfo-details
+      containers:
+      - name: accounts
+        image: docker.io/istio/examples-bookinfo-details-v1:1.15.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
